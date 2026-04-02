@@ -1,24 +1,127 @@
 # FujiDay
 
-FujiDay is a Fujifilm-first agentic grading and composition system for Codex and Claude-style coding agents. It packages a reusable skills library, local photo runtimes, structured style packs, command-line entry points, and regression checks for recipe generation, previews, composition analysis, crop exports, and chained final renders.
+FujiDay is a Fujifilm-first agentic grading system for Codex and Claude. It helps an agent analyze an image, require an explicit Fujifilm style choice, generate a structured film-simulation recipe, and optionally return an approximate preview or export.
 
-It is intentionally conservative about what it claims. FujiDay can analyze an image, guide a user through Fujifilm style selection, generate a structured recipe, render an approximate preview, and export an approximate graded image. It does not claim to reproduce Fujifilm's in-camera JPEG engine exactly.
+FujiDay is intentionally conservative about what it claims:
 
-## How It Works
+- It does not silently guess a recipe before style selection.
+- It treats a recipe as `base film simulation + supporting settings`, not as a magic preset.
+- It does not claim exact Fujifilm in-camera JPEG reproduction.
 
-FujiDay starts from the moment an agent sees an image-based grading request. Instead of jumping straight into a recipe, it routes the task, decides whether the user already chose a style, and only shows a Fujifilm menu when that choice is still missing.
+## What FujiDay Does
 
-Once a style is selected, FujiDay separates the base Film Simulation from the supporting settings that shape white balance, contrast, saturation, dynamic range, and texture. If a preview is requested, it renders an approximate version of the look. If a file export is requested, it writes an approximate graded JPG or PNG to disk.
+FujiDay turns a vague "make this feel more Fuji" request into a guided workflow that is easier to understand and easier to repeat.
 
-The whole system is organized as a bundle: skills drive behavior, the runtimes execute analysis and rendering, and the style packs store Fujifilm-specific grading rules plus composition-specific crop heuristics.
+- It looks at the scene and summarizes the grading context.
+- It shows the user the Fujifilm directions they can actually choose from.
+- It returns a structured recipe, plus an approximate preview or export when requested.
+
+## Who Should Read What
+
+| Reader | Start Here | Why |
+| --- | --- | --- |
+| Users | [Quick Start](#quick-start) and [The Seven Fujifilm Styles](#the-seven-fujifilm-styles) | Understand the product flow and the available looks. |
+| Agents | [`skills/using-fujiday/SKILL.md`](./skills/using-fujiday/SKILL.md) | This is the top-level routing and behavior contract. |
+| Developers | [Commands and Runtime APIs](#commands-and-runtime-apis) and [docs/architecture.md](./docs/architecture.md) | See the public interfaces and system layout. |
+
+## The Product Logic
+
+FujiDay's main workflow is fixed on purpose:
+
+1. User uploads an image.
+2. FujiDay analyzes the scene.
+3. FujiDay shows Fujifilm style choices if the user has not selected one yet.
+4. User chooses a style.
+5. FujiDay generates a structured recipe.
+6. FujiDay can return an approximate preview or write an approximate export.
+
+```mermaid
+flowchart LR
+    A["Upload image"] --> B["Analyze scene"]
+    B --> C{"Style already chosen?"}
+    C -- "No" --> D["Show Fujifilm style menu"]
+    D --> E["User selects style"]
+    C -- "Yes" --> F["Generate structured recipe"]
+    E --> F
+    F --> G["Optional preview"]
+    F --> H["Optional export"]
+```
+
+Non-negotiable product rules:
+
+- FujiDay does not generate a Fujifilm recipe before the user selects a style.
+- FujiDay separates the effect of the base Film Simulation from white balance, tone, color, dynamic range, grain, and Color Chrome settings.
+- Preview and export outputs are approximate renders, not camera-exact Fujifilm JPEGs.
+
+## The Seven Fujifilm Styles
+
+These are the core color directions currently shipped in the bundled Fujifilm style pack.
+
+| Key | Style | Character | Best For | Watch Out |
+| --- | --- | --- | --- | --- |
+| `provia` | `PROVIA / Standard` | Balanced, natural, everyday baseline | Daily shooting, mixed subjects, clean reference look | Can feel too plain when the brief needs stronger mood. |
+| `velvia` | `Velvia / Vivid` | Saturated, scenic, high-impact color | Landscapes, travel, foliage, skies | Skin can turn aggressive and bright scenes can clip quickly. |
+| `astia` | `ASTIA / Soft` | Soft, flattering, portrait-friendly | Portraits, fashion, gentle daylight | Can feel too gentle for gritty or graphic scenes. |
+| `classic_chrome` | `Classic Chrome` | Muted, editorial, documentary | Street, travel, magazine-style color | Can feel too restrained for beauty-oriented portraits. |
+| `classic_neg` | `Classic Neg.` | Nostalgic, denser shadows, negative-film mood | Everyday life, suburban memory, nostalgic street | Can over-darken dim scenes and make skin feel stern under poor light. |
+| `eterna` | `ETERNA` | Low-contrast, cinematic, quiet scenes | Cinematic stills, quiet travel, video-like mood | May feel too flat if the user expects punch. |
+| `acros` | `ACROS` | Deep monochrome, texture and tonal depth | Graphic black-and-white, texture-heavy work, monochrome portraits | Not suitable when the user still wants color information. |
+
+## Quick Start
+
+### Guided Interaction
+
+Typical grading flow:
+
+1. Upload an image.
+2. Ask for FujiDay grading help.
+3. FujiDay analyzes the scene and shows the Fujifilm menu.
+4. Choose a style such as `Classic Chrome` or `ETERNA`.
+5. FujiDay returns a recipe and, if requested, a preview or export path.
+
+### CLI
+
+Show the Fujifilm style menu for an image:
+
+```bash
+grade-fujifilm --image /absolute/path/to/photo.jpg
+```
+
+Generate a recipe directly:
+
+```bash
+grade-fujifilm --image /absolute/path/to/photo.jpg --style "Classic Chrome" --preview
+```
+
+Export an approximate graded render:
+
+```bash
+export-fujifilm --image /absolute/path/to/photo.jpg --style "ETERNA" --output /absolute/path/to/output.jpg
+```
+
+### Node Runtime
+
+```js
+const fujiday = require('./index.js');
+
+async function run() {
+  const result = await fujiday.generate_recipe({
+    image_path: '/absolute/path/to/photo.jpg',
+    selected_style: 'Classic Chrome',
+    output_preview: true
+  });
+
+  console.log(result);
+}
+
+run();
+```
 
 ## Installation
 
-FujiDay currently documents three real entry points:
+FujiDay currently documents three real entry points.
 
 ### Codex
-
-Clone the repository, install dependencies, and expose the entire FujiDay bundle to native skill discovery:
 
 ```bash
 git clone https://github.com/<owner>/FujiDay.git ~/.codex/FujiDay
@@ -50,209 +153,114 @@ cd FujiDay
 npm install
 ```
 
-## Quick Start
+## Example Output
 
-### Agent-style interaction
+FujiDay returns a structured recipe, not just an aesthetic description.
 
-Typical guided flow:
+Example result, shortened for readability:
 
-1. User uploads an image.
-2. The agent analyzes the scene briefly.
-3. The agent shows Fujifilm options such as `ASTIA / Soft`, `Classic Chrome`, or `ETERNA`.
-4. The user chooses one style by name or by menu number.
-5. FujiDay returns a recipe and, if requested, a preview or export path.
-
-Typical composition flow:
-
-1. User uploads an image and asks for composition analysis or cropping.
-2. FujiDay analyzes Alex Webb fit, layering, and crop candidates.
-3. If no crop mode was chosen yet, FujiDay returns `selection_required` with `balanced`, `narrative`, and `webb_risky`.
-4. Once the crop mode is selected, FujiDay can export a crop or continue into a Fujifilm render.
-
-### CLI
-
-Show the guided style menu for an image:
-
-```bash
-grade-fujifilm --image /absolute/path/to/photo.jpg
-```
-
-Generate a recipe directly:
-
-```bash
-grade-fujifilm --image /absolute/path/to/photo.jpg --style "Classic Chrome" --preview
-```
-
-Export an approximate graded render:
-
-```bash
-export-fujifilm --image /absolute/path/to/photo.jpg --style "ETERNA" --output /absolute/path/to/output.jpg
-```
-
-Analyze Alex Webb-like composition:
-
-```bash
-analyze-composition --image /absolute/path/to/photo.jpg
-```
-
-Export a composition crop:
-
-```bash
-export-crop --image /absolute/path/to/photo.jpg --mode narrative
-```
-
-Show the crop-mode selection step first:
-
-```bash
-export-crop --image /absolute/path/to/photo.jpg
-```
-
-Chain Webb-style cropping into a Fujifilm final render:
-
-```bash
-compose-fujifilm --image /absolute/path/to/photo.jpg --mode balanced --fujifilm-style "Classic Chrome"
-```
-
-Show the Fujifilm style-selection step after cropping:
-
-```bash
-compose-fujifilm --image /absolute/path/to/photo.jpg --mode balanced
-```
-
-### Node Runtime
-
-```js
-const fujiday = require('./index.js');
-
-async function run() {
-  const result = await fujiday.generate_recipe({
-    image_path: '/absolute/path/to/photo.jpg',
-    selected_style: 'Classic Chrome',
-    output_preview: true
-  });
-
-  console.log(result);
+```json
+{
+  "status": "success",
+  "analysis_provider": "openai",
+  "selected_style": "Classic Chrome",
+  "selected_target_style": "Classic Chrome",
+  "image_observation": {
+    "subject": "street",
+    "lighting": "soft daylight",
+    "contrast_risk": "medium",
+    "skin_tone_importance": "low",
+    "monochrome_suitability": "plausible",
+    "portrait_priority": false,
+    "high_contrast_scene": false,
+    "night_scene": false,
+    "summary": "Quiet street scene with gentle daylight and moderate contrast."
+  },
+  "recipe": {
+    "base_film_simulation": "Classic Chrome",
+    "wb": "Daylight",
+    "wb_shift": "+1 Red, -2 Blue",
+    "highlight": "0",
+    "shadow": "+1",
+    "color": "-1",
+    "grain": "Weak",
+    "dynamic_range": "DR100",
+    "color_chrome": "Weak"
+  },
+  "rationale": "Classic Chrome is a good fit for subdued documentary color with moderate contrast control.",
+  "compatibility_notes": "Newer bodies add extra controls such as Color Chrome FX Blue and Clarity.",
+  "next_test_to_run": "Keep Classic Chrome fixed and compare Shadow +1 versus Shadow 0 on the same scene.",
+  "preview_note": "Approximate preview only; this is not a camera-exact Fujifilm JPEG render."
 }
-
-run();
 ```
 
-## What's Inside
+## Commands and Runtime APIs
 
-### Skills
+### Main CLI Commands
 
-FujiDay ships a multi-skill bundle rather than a single monolithic prompt. The skills cover:
+| Command | Purpose | Returns |
+| --- | --- | --- |
+| `grade-fujifilm` | Analyze an image and show the style-selection menu, or generate a recipe when `--style` is provided | Style menu or structured Fujifilm recipe |
+| `compare-fujifilm` | Compare multiple Fujifilm styles for an image or textual goal | Ranked comparison and recommended style |
+| `export-fujifilm` | Write an approximate graded JPG or PNG to disk | Export path plus recipe summary |
 
-- task routing
-- composition routing
-- crop-mode selection
-- Webb composition analysis
-- crop export
-- composition-to-Fujifilm chaining
-- guided Fujifilm style selection
-- Fujifilm workflow selection
-- recipe generation
-- preview rendering
-- export workflows
-- look comparison
-- debugging and result validation
-- style-pack authoring
+### Main Runtime Interfaces
 
-### Runtime
-
-The runtimes expose these public functions:
-
-- `analyze_image`
-- `list_styles`
-- `generate_recipe`
-- `export_render`
-- `compare_styles`
-- `execute`
-- `analyze_composition`
-- `list_crop_modes`
-- `recommend_crop`
-- `export_crop`
-- `compose_fujifilm`
-
-### Style Packs
-
-The bundled Fujifilm style pack currently covers:
-
-- `PROVIA / Standard`
-- `Velvia / Vivid`
-- `ASTIA / Soft`
-- `Classic Chrome`
-- `Classic Neg.`
-- `ETERNA`
-- `ACROS`
-
-The bundled composition family currently covers:
-
-- `alex-webb`
-
-### Commands
-
-FujiDay includes these CLI entry points:
-
-- `grade-fujifilm`
-- `compare-fujifilm`
-- `export-fujifilm`
-- `build-style-pack`
-- `analyze-composition`
-- `export-crop`
-- `compose-fujifilm`
-
-Behavior notes:
-
-- `grade-fujifilm --image ...` returns a style-selection menu when `--style` is omitted.
-- `export-crop --image ...` and `compose-fujifilm --image ...` return crop-mode selection when `--mode` is omitted and a VLM-capable provider is available.
-- If the active provider is `disabled`, composition analysis still works, but crop export and composition-to-Fujifilm export return `VLM_REQUIRED_FOR_CROP_EXPORT` instead of offering a dead-end selection flow.
-- `compare-fujifilm` returns `INPUT_ERROR` when a requested style name is unknown.
-
-### Evals
-
-FujiDay includes fixture and pressure-test scaffolding for:
-
-- runtime contract regressions
-- skill bundle coverage
-- style-pack validation
-- 30-scene eval manifests
-- composition-manifest and crop-pressure scaffolding
+| Function | Purpose | Returns |
+| --- | --- | --- |
+| `analyze_image` | Analyze the scene before style selection | Observation and recommended styles |
+| `list_styles` | Turn an observation or textual goal into a ranked Fujifilm menu | Ranked style list |
+| `generate_recipe` | Generate a structured Fujifilm recipe | Recipe, rationale, compatibility notes, optional preview |
+| `export_render` | Write an approximate graded render to disk | Export path plus recipe summary |
+| `compare_styles` | Compare multiple Fujifilm looks | Recommended style plus comparison notes |
+| `execute` | Compatibility wrapper around `generate_recipe` | Same contract as recipe generation |
 
 ## Vision Providers
 
-FujiDay supports five image-observation modes:
+FujiDay supports five image-observation modes.
 
-- `openai`
-  Uses OpenAI Chat Completions with image input.
-- `openai_compatible`
-  Uses an OpenAI-compatible `/v1/chat/completions` endpoint.
-- `ollama`
-  Uses a local Ollama server through `/api/chat`.
-- `minimax`
-  Uses MiniMax's official `understand_image` MCP tool. This is intentionally separate from MiniMax's text API, which does not currently accept image input.
-- `disabled`
-  Skips remote vision and falls back to local heuristic analysis.
+| Provider | Best For | API Key | Notes |
+| --- | --- | --- | --- |
+| `openai` | Hosted vision with the default FujiDay path | `OPENAI_API_KEY` or `FUJIDAY_VLM_API_KEY` | Uses OpenAI Chat Completions with image input. |
+| `openai_compatible` | Compatible hosted endpoints | Optional, usually `FUJIDAY_VLM_API_KEY` | Uses an OpenAI-compatible `/v1/chat/completions` endpoint. |
+| `ollama` | Local, low-cost image analysis | None by default | Uses a local Ollama server through `/api/chat`. |
+| `minimax` | MiniMax image understanding through MCP | `MINIMAX_API_KEY` or `FUJIDAY_MINIMAX_API_KEY` | Uses MiniMax's official `understand_image` MCP tool. |
+| `disabled` | Fully local fallback mode | None | Skips remote vision and falls back to heuristic analysis. |
 
-If no provider is configured, FujiDay defaults to:
+Default provider resolution:
 
 - `openai` when `OPENAI_API_KEY` or `FUJIDAY_VLM_API_KEY` is available
-- `minimax` when `MINIMAX_API_KEY` or `FUJIDAY_MINIMAX_API_KEY` is available and no OpenAI or generic FujiDay VLM settings are present
+- `minimax` when MiniMax credentials exist and no OpenAI or generic FujiDay VLM settings are present
 - otherwise `disabled`
 
-MiniMax provider notes:
+## Additional Workflows
 
-- `MINIMAX_API_KEY` or `FUJIDAY_MINIMAX_API_KEY` authenticates MiniMax MCP requests.
-- `MINIMAX_API_HOST` defaults to `https://api.minimax.io`.
-- `FUJIDAY_MINIMAX_MCP_COMMAND` defaults to `uvx`.
-- `FUJIDAY_MINIMAX_MCP_ARGS` defaults to `["minimax-coding-plan-mcp", "-y"]`.
-- `MINIMAX_MCP_BASE_PATH` defaults to the system temp directory.
+FujiDay also includes composition workflows, but they are secondary to the main Fujifilm grading path.
 
-`disabled` provider notes:
+### Additional CLI Commands
 
-- `analyze_image` and `analyze_composition` still return heuristic observations.
-- `generate_recipe` and `compare_styles` still work in heuristic mode.
-- `export-crop` and `compose-fujifilm` require a VLM-capable provider because FujiDay does not fake precise crop coordinates without image understanding.
+| Command | Purpose |
+| --- | --- |
+| `analyze-composition` | Analyze Alex Webb-style layering and composition fit |
+| `export-crop` | Export a crop from the selected crop mode |
+| `compose-fujifilm` | Chain a crop workflow into a Fujifilm final render |
+| `build-style-pack` | Validate and build style-pack data |
+
+### Additional Runtime Interfaces
+
+| Function | Purpose |
+| --- | --- |
+| `analyze_composition` | Return composition observations and recommendations |
+| `list_crop_modes` | Show available crop modes |
+| `recommend_crop` | Recommend crop logic before export |
+| `export_crop` | Write a crop to disk |
+| `compose_fujifilm` | Chain composition output into a Fujifilm render |
+
+Bundled secondary workflows currently include:
+
+- Alex Webb composition analysis
+- crop export
+- composition-to-Fujifilm chaining
 
 ## Image Handling
 
@@ -260,7 +268,7 @@ FujiDay normalizes EXIF orientation before analysis, crop planning, preview rend
 
 If `generate_recipe()` is called with `delete_after: true`, FujiDay only deletes the source image after the recipe path finishes successfully. Failed analysis or preview generation does not remove the original file.
 
-## Current Limitations
+## Current Scope
 
 FujiDay is deliberately scoped.
 
@@ -290,9 +298,7 @@ Useful references:
 
 ## Contributing
 
-FujiDay is structured as a skills-plus-runtime repository. If you contribute, keep the public claims aligned with the code, keep style-pack logic data-driven, and add tests for any user-facing runtime or skill behavior changes.
-
-For architecture context, start with [docs/architecture.md](./docs/architecture.md).
+FujiDay is structured as a skills-plus-runtime repository. Keep the public claims aligned with the code, keep style-pack logic data-driven, and add tests for any user-facing runtime or skill behavior changes.
 
 ## License
 
