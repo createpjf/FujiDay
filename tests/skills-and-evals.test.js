@@ -4,12 +4,22 @@ const fs = require('node:fs');
 const path = require('node:path');
 const manifest = require('../evals/fujiday-v1-manifest.json');
 const pressureTests = require('../evals/skills-pressure-tests.json');
+const compositionManifest = require('../evals/composition-v1-manifest.json');
+const compositionPressureTests = require('../evals/composition-skills-pressure-tests.json');
 
 const ROOT = path.resolve(__dirname, '..');
 const REQUIRED_SKILLS = [
   'using-fujiday',
   'routing-color-tasks',
   'choosing-fujifilm-style',
+  'choosing-fujifilm-workflow',
+  'routing-composition-tasks',
+  'choosing-crop-mode',
+  'analyzing-webb-composition',
+  'exporting-crops',
+  'chaining-composition-to-fujifilm',
+  'validating-composition-results',
+  'writing-composition-style-packs',
   'generating-fujifilm-recipe',
   'rendering-color-preview',
   'exporting-color-renders',
@@ -32,4 +42,12 @@ test('eval manifest includes at least 30 fixtures', () => {
 
 test('pressure test manifest includes at least 10 prompts', () => {
   assert.ok(pressureTests.length >= 10);
+});
+
+test('composition eval manifest includes at least 12 scenarios', () => {
+  assert.ok(compositionManifest.length >= 12);
+});
+
+test('composition pressure manifest includes at least 10 prompts', () => {
+  assert.ok(compositionPressureTests.length >= 10);
 });

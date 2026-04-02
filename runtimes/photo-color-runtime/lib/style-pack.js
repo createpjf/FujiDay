@@ -14,7 +14,12 @@ function clone(value) {
 
 function normalizeSelectedStyle(input) {
   if (typeof input !== 'string' || input.trim().length === 0) return null;
-  return STYLE_ALIASES.get(input.trim().toLowerCase()) || null;
+  const trimmed = input.trim();
+  if (/^\d+$/.test(trimmed)) {
+    const index = Number(trimmed) - 1;
+    return catalog.styles[index]?.name || null;
+  }
+  return STYLE_ALIASES.get(trimmed.toLowerCase()) || null;
 }
 
 function defaultObservation() {

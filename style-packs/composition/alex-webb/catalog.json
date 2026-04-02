@@ -1,0 +1,17 @@
+{
+  "family": "composition",
+  "version": "1.0.0",
+  "styles": [
+    {
+      "name": "alex-webb",
+      "aliases": ["alex webb", "webb", "alex-webb composition"],
+      "summary": "Layered street-style composition with strong foreground/midground/background relationships, color-light tension, and readable narrative density.",
+      "knowledge_refs": [
+        "knowledge/source-hierarchy.md",
+        "knowledge/layering-foundations.md",
+        "knowledge/cropping-guardrails.md"
+      ],
+      "default_modes": ["balanced", "narrative", "webb_risky"]
+    }
+  ]
+}

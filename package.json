@@ -18,6 +18,9 @@
     "eval:check": "node evals/run-evals.js"
   },
   "bin": {
+    "analyze-composition": "./commands/analyze-composition.js",
+    "export-crop": "./commands/export-crop.js",
+    "compose-fujifilm": "./commands/compose-fujifilm.js",
     "grade-fujifilm": "./commands/grade-fujifilm.js",
     "compare-fujifilm": "./commands/compare-fujifilm.js",
     "export-fujifilm": "./commands/export-fujifilm.js",

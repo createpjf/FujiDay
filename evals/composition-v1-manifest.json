@@ -1,0 +1,14 @@
+[
+  {"id":"comp-01","scenario":"flat_light","textual_description":"Overcast public scene with weak separation and large empty sky.","expected_modes":["balanced","narrative"]},
+  {"id":"comp-02","scenario":"strong_foreground","textual_description":"Close foreground passerby with readable middle and distant layers.","expected_modes":["balanced","webb_risky"]},
+  {"id":"comp-03","scenario":"multi_subject_overlap","textual_description":"Crowded street with multiple people but partial overlap in the center.","expected_modes":["balanced","narrative"]},
+  {"id":"comp-04","scenario":"open_campsite","textual_description":"Open campsite with car, picnic setup, one moving subject, and a distant figure near water.","expected_modes":["narrative","balanced"]},
+  {"id":"comp-05","scenario":"night_street","textual_description":"Night street with neon signs, reflections, and separated figures.","expected_modes":["balanced","webb_risky"]},
+  {"id":"comp-06","scenario":"strong_edge_object","textual_description":"Hard edge object pressing from one side while the main action unfolds deeper in the frame.","expected_modes":["webb_risky","balanced"]},
+  {"id":"comp-07","scenario":"lakeside_secondary_actor","textual_description":"Main subject in the foreground with a calmer secondary actor across water or open space.","expected_modes":["narrative","balanced"]},
+  {"id":"comp-08","scenario":"car_dominant","textual_description":"Vehicle occupies much of the frame while people and setting provide the remaining layers.","expected_modes":["balanced","narrative"]},
+  {"id":"comp-09","scenario":"oversized_single_subject","textual_description":"One subject dominates too much of the frame and weakens layered complexity.","expected_modes":["balanced","narrative"]},
+  {"id":"comp-10","scenario":"weak_color_blocks","textual_description":"Muted colors but decent spatial layering and human relationships.","expected_modes":["narrative","balanced"]},
+  {"id":"comp-11","scenario":"strong_light_shadow","textual_description":"Hard daylight, shadow bands, and figures separated by bright and dark zones.","expected_modes":["webb_risky","balanced"]},
+  {"id":"comp-12","scenario":"secondary_story_actor","textual_description":"Main subject plus a subtle but important second actor deeper in the frame.","expected_modes":["narrative","webb_risky"]}
+]

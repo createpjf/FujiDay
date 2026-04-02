@@ -1,0 +1,22 @@
+{
+  "modes": [
+    {
+      "name": "balanced",
+      "summary": "Default safe crop that improves structure while preserving broad scene readability.",
+      "menu_blurb": "Safer first pass. Improves composition without aggressively sacrificing context.",
+      "default_aspect_ratio": "3:2"
+    },
+    {
+      "name": "narrative",
+      "summary": "Protects human relationships, secondary actors, and contextual story cues.",
+      "menu_blurb": "Best when the scene works because multiple people or actions relate across space.",
+      "default_aspect_ratio": "3:2"
+    },
+    {
+      "name": "webb_risky",
+      "summary": "Pushes layer pressure, edge tension, and density harder in pursuit of a more Alex Webb-like result.",
+      "menu_blurb": "Most aggressive option. Better for layered tension, but easier to over-tighten.",
+      "default_aspect_ratio": "16:9"
+    }
+  ]
+}

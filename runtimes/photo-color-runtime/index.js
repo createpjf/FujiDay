@@ -16,6 +16,7 @@ async function analyze_image({ image_path } = {}) {
     const { buffer, metadata } = await readAndValidateImage(image_path, config.maxImageBytes);
     const observation = await analyzeImageObservation({
       imageBuffer: buffer,
+      imagePath: image_path,
       width: metadata.width,
       height: metadata.height,
       provider: config.vlmProvider,
@@ -23,7 +24,11 @@ async function analyze_image({ image_path } = {}) {
       model: config.vlmModel,
       timeoutMs: config.vlmTimeoutMs,
       maxRetries: config.vlmMaxRetries,
-      apiKey: config.vlmApiKey
+      apiKey: config.vlmApiKey,
+      minimaxMcpCommand: config.minimaxMcpCommand,
+      minimaxMcpArgs: config.minimaxMcpArgs,
+      minimaxMcpBasePath: config.minimaxMcpBasePath,
+      minimaxApiResourceMode: config.minimaxApiResourceMode
     });
 
     return {
@@ -64,10 +69,10 @@ async function generate_recipe({ image_path, selected_style, output_preview, del
     }
 
     const { buffer, metadata } = await readAndValidateImage(image_path, config.maxImageBytes);
-    const deletionStatus = await handleDeletion(image_path, delete_after);
 
     const observation = await analyzeImageObservation({
       imageBuffer: buffer,
+      imagePath: image_path,
       width: metadata.width,
       height: metadata.height,
       provider: config.vlmProvider,
@@ -75,7 +80,11 @@ async function generate_recipe({ image_path, selected_style, output_preview, del
       model: config.vlmModel,
       timeoutMs: config.vlmTimeoutMs,
       maxRetries: config.vlmMaxRetries,
-      apiKey: config.vlmApiKey
+      apiKey: config.vlmApiKey,
+      minimaxMcpCommand: config.minimaxMcpCommand,
+      minimaxMcpArgs: config.minimaxMcpArgs,
+      minimaxMcpBasePath: config.minimaxMcpBasePath,
+      minimaxApiResourceMode: config.minimaxApiResourceMode
     });
 
     const built = buildRecipeFromObservation(normalizedStyle, observation);
@@ -89,6 +98,8 @@ async function generate_recipe({ image_path, selected_style, output_preview, del
         throw new FujiDayError('PREVIEW_RENDER_ERROR', `Unable to generate preview image: ${error.message}`);
       }
     }
+
+    const deletionStatus = await handleDeletion(image_path, delete_after);
 
     return {
       status: 'success',
@@ -115,18 +126,29 @@ async function generate_recipe({ image_path, selected_style, output_preview, del
   }
 }
 
-async function export_render({ image_path, selected_style, recipe_override = null, format = 'jpg', output_path = null } = {}) {
+async function export_render({
+  image_path,
+  selected_style,
+  recipe_override = null,
+  format = 'jpg',
+  output_path = null,
+  image_observation = null
+} = {}) {
   try {
     const config = readConfig();
     const normalizedStyle = normalizeSelectedStyle(selected_style);
     if (!normalizedStyle) {
       throw new FujiDayError('INPUT_ERROR', 'selected_style must be a supported Fujifilm style.');
     }
+    if (image_observation !== null && (typeof image_observation !== 'object' || Array.isArray(image_observation))) {
+      throw new FujiDayError('INPUT_ERROR', 'image_observation must be an object when provided.');
+    }
 
     const finalFormat = normalizeFormat(format, output_path);
     const { buffer, metadata } = await readAndValidateImage(image_path, config.maxImageBytes);
-    const observation = await analyzeImageObservation({
+    const observation = image_observation || await analyzeImageObservation({
       imageBuffer: buffer,
+      imagePath: image_path,
       width: metadata.width,
       height: metadata.height,
       provider: config.vlmProvider,
@@ -134,7 +156,11 @@ async function export_render({ image_path, selected_style, recipe_override = nul
       model: config.vlmModel,
       timeoutMs: config.vlmTimeoutMs,
       maxRetries: config.vlmMaxRetries,
-      apiKey: config.vlmApiKey
+      apiKey: config.vlmApiKey,
+      minimaxMcpCommand: config.minimaxMcpCommand,
+      minimaxMcpArgs: config.minimaxMcpArgs,
+      minimaxMcpBasePath: config.minimaxMcpBasePath,
+      minimaxApiResourceMode: config.minimaxApiResourceMode
     });
 
     const built = buildRecipeFromObservation(normalizedStyle, observation);
@@ -159,7 +185,7 @@ async function export_render({ image_path, selected_style, recipe_override = nul
 
     return {
       status: 'success',
-      analysis_provider: observation.analysis_provider,
+      analysis_provider: observation.analysis_provider || null,
       selected_style: normalizedStyle,
       selected_target_style: normalizedStyle,
       image_observation: observation,
@@ -183,12 +209,26 @@ async function export_render({ image_path, selected_style, recipe_override = nul
 async function compare_styles({ image_path = null, styles, textual_goal = null } = {}) {
   try {
     let observation = null;
+    let normalizedStyles = styles;
+
+    if (Array.isArray(styles) && styles.length > 0) {
+      const requested = styles.map(style => ({
+        raw: style,
+        normalized: normalizeSelectedStyle(style)
+      }));
+      const invalid = requested.filter(item => !item.normalized).map(item => item.raw);
+      if (invalid.length > 0) {
+        throw new FujiDayError('INPUT_ERROR', `Unknown Fujifilm style(s): ${invalid.join(', ')}.`);
+      }
+      normalizedStyles = requested.map(item => item.normalized);
+    }
 
     if (image_path) {
       const config = readConfig();
       const { buffer, metadata } = await readAndValidateImage(image_path, config.maxImageBytes);
       observation = await analyzeImageObservation({
         imageBuffer: buffer,
+        imagePath: image_path,
         width: metadata.width,
         height: metadata.height,
         provider: config.vlmProvider,
@@ -196,12 +236,16 @@ async function compare_styles({ image_path = null, styles, textual_goal = null }
         model: config.vlmModel,
         timeoutMs: config.vlmTimeoutMs,
         maxRetries: config.vlmMaxRetries,
-        apiKey: config.vlmApiKey
+        apiKey: config.vlmApiKey,
+        minimaxMcpCommand: config.minimaxMcpCommand,
+        minimaxMcpArgs: config.minimaxMcpArgs,
+        minimaxMcpBasePath: config.minimaxMcpBasePath,
+        minimaxApiResourceMode: config.minimaxApiResourceMode
       });
     }
 
     const comparison = compareStyleSet({
-      styles,
+      styles: normalizedStyles,
       imageObservation: observation,
       textualGoal: textual_goal || ''
     });

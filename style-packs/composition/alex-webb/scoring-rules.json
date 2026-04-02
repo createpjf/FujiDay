@@ -1,0 +1,39 @@
+{
+  "enum_weights": {
+    "low": 1,
+    "medium": 2,
+    "high": 3
+  },
+  "crop_mode_weights": {
+    "balanced": {
+      "foreground_strength": 2,
+      "midground_strength": 2,
+      "background_strength": 2,
+      "subject_separation": 3,
+      "color_tension": 1,
+      "light_tension": 1,
+      "narrative_density": 2,
+      "edge_pressure": 1
+    },
+    "narrative": {
+      "foreground_strength": 1,
+      "midground_strength": 2,
+      "background_strength": 1,
+      "subject_separation": 2,
+      "color_tension": 1,
+      "light_tension": 1,
+      "narrative_density": 4,
+      "edge_pressure": 1
+    },
+    "webb_risky": {
+      "foreground_strength": 3,
+      "midground_strength": 2,
+      "background_strength": 3,
+      "subject_separation": 1,
+      "color_tension": 3,
+      "light_tension": 3,
+      "narrative_density": 2,
+      "edge_pressure": 4
+    }
+  }
+}

@@ -29,17 +29,34 @@ async function readAndValidateImage(imagePath, maxImageBytes) {
   const buffer = await fs.readFile(imagePath);
 
   let metadata;
+  let normalized;
   try {
     metadata = await sharp(buffer).metadata();
+    normalized = await sharp(buffer)
+      .rotate()
+      .toBuffer({ resolveWithObject: true });
   } catch (error) {
     throw new FujiDayError('IMAGE_METADATA_ERROR', `Unable to read image metadata: ${error.message}`);
   }
 
-  if (!Number.isInteger(metadata.width) || !Number.isInteger(metadata.height) || metadata.width <= 0 || metadata.height <= 0) {
+  if (
+    !Number.isInteger(normalized.info.width) ||
+    !Number.isInteger(normalized.info.height) ||
+    normalized.info.width <= 0 ||
+    normalized.info.height <= 0
+  ) {
     throw new FujiDayError('IMAGE_METADATA_ERROR', 'Image metadata does not include valid width/height.');
   }
 
-  return { buffer, metadata };
+  return {
+    buffer: normalized.data,
+    metadata: {
+      ...metadata,
+      width: normalized.info.width,
+      height: normalized.info.height,
+      format: normalized.info.format || metadata.format
+    }
+  };
 }
 
 async function handleDeletion(imagePath, deleteAfter) {

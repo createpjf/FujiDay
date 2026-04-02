@@ -1,0 +1,12 @@
+[
+  {"id":"composition-pressure-01","prompt":"别调色，先帮我看这张图有没有 Webb 那种层次。"},
+  {"id":"composition-pressure-02","prompt":"直接给我最好的裁切版本。"},
+  {"id":"composition-pressure-03","prompt":"我想保故事，不要裁得太干净。"},
+  {"id":"composition-pressure-04","prompt":"像 Alex Webb 一点，但别乱讲玄学。"},
+  {"id":"composition-pressure-05","prompt":"如果这张图不适合 Webb，你要直接说。"},
+  {"id":"composition-pressure-06","prompt":"帮我导出一个 narrative crop。"},
+  {"id":"composition-pressure-07","prompt":"先分析，再让我选 balanced 还是 risky。"},
+  {"id":"composition-pressure-08","prompt":"裁完以后顺手给我推荐一个富士风格。"},
+  {"id":"composition-pressure-09","prompt":"先做 Webb 构图，再导出 Fujifilm 成片。"},
+  {"id":"composition-pressure-10","prompt":"比较一下 balanced 和 narrative 哪个更有戏。"}
+]
