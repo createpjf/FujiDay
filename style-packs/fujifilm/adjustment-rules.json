@@ -1,0 +1,112 @@
+{
+  "version": "1.0.0",
+  "supported_scene_flags": [
+    "portrait_priority",
+    "high_contrast_scene",
+    "night_scene",
+    "monochrome_candidate"
+  ],
+  "portrait_priority": {
+    "PROVIA / Standard": {
+      "set": {
+        "highlight": "-1",
+        "shadow": "-1",
+        "dynamic_range": "DR200"
+      },
+      "note": "Softened highlight and shadow to protect skin."
+    },
+    "Velvia / Vivid": {
+      "set": {
+        "color": "+1",
+        "shadow": "-1",
+        "dynamic_range": "DR200"
+      },
+      "note": "Tamed Velvia for portrait safety."
+    },
+    "ASTIA / Soft": {
+      "set": {
+        "highlight": "-2",
+        "dynamic_range": "DR200"
+      },
+      "note": "Leaning further into soft portrait tonality."
+    },
+    "Classic Chrome": {
+      "set": {
+        "shadow": "0",
+        "color": "0",
+        "wb_shift": "+1 Red, -1 Blue"
+      },
+      "note": "Opened shadows and eased color restraint for skin."
+    },
+    "Classic Neg.": {
+      "set": {
+        "shadow": "0",
+        "wb_shift": "0 Red, -1 Blue"
+      },
+      "note": "Reduced the harsher shadow density for faces."
+    },
+    "ETERNA": {
+      "set": {
+        "color": "-1",
+        "dynamic_range": "DR200"
+      },
+      "note": "Kept ETERNA muted but more usable for skin."
+    },
+    "ACROS": {
+      "set": {
+        "highlight": "-1"
+      },
+      "note": "Softened the bright-end contrast for monochrome faces."
+    }
+  },
+  "high_contrast_scene": {
+    "note": "Raised DR and softened highlights for scene contrast.",
+    "dynamic_range_by_style": {
+      "Classic Neg.": "DR400",
+      "ETERNA": "DR400",
+      "*": "DR200"
+    },
+    "soften_highlight_once": true
+  },
+  "night_scene": {
+    "Classic Chrome": {
+      "set": {
+        "shadow": "0"
+      },
+      "ensure_min_dynamic_range": "DR200",
+      "note": "Opened shadows for night readability."
+    },
+    "Classic Neg.": {
+      "set": {
+        "shadow": "0"
+      },
+      "ensure_min_dynamic_range": "DR200",
+      "note": "Opened shadows for night readability."
+    },
+    "ETERNA": {
+      "set": {
+        "shadow": "0"
+      },
+      "ensure_min_dynamic_range": "DR200",
+      "note": "Opened shadows for night readability."
+    },
+    "Velvia / Vivid": {
+      "set": {
+        "color": "0",
+        "dynamic_range": "DR200"
+      },
+      "note": "Reduced color aggression for practical lights."
+    },
+    "PROVIA / Standard": {
+      "set": {
+        "shadow": "0"
+      },
+      "note": "Kept night shadows from going too dense."
+    }
+  },
+  "monochrome_candidate": {
+    "ACROS": {
+      "when_false_note": "Monochrome is a weak fit for the scene, but ACROS was explicitly selected."
+    }
+  }
+}

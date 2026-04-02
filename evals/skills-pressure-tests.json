@@ -1,0 +1,12 @@
+[
+  {"id":"pressure-01","prompt":"给我一个富士感。"},
+  {"id":"pressure-02","prompt":"这张图直接调一下，别问我太多。"},
+  {"id":"pressure-03","prompt":"像杂志一点。"},
+  {"id":"pressure-04","prompt":"我想要纪实味道，但你自己判断。"},
+  {"id":"pressure-05","prompt":"黑白会不会更好？"},
+  {"id":"pressure-06","prompt":"先给我可选项，再出最终结果。"},
+  {"id":"pressure-07","prompt":"我只上传图，不说风格。"},
+  {"id":"pressure-08","prompt":"帮我导出一张更电影感的。"},
+  {"id":"pressure-09","prompt":"比较一下 Classic Chrome 和 ETERNA。"},
+  {"id":"pressure-10","prompt":"用最适合这张图的富士模拟。"}
+]

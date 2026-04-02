@@ -1,0 +1,272 @@
+{
+  "family": "fujifilm",
+  "version": "1.0.0",
+  "styles": [
+    {
+      "name": "PROVIA / Standard",
+      "aliases": ["provia", "standard", "provia / standard"],
+      "summary": "Balanced, natural, and versatile.",
+      "menu_blurb": "自然中性，适合日常和参考底片。",
+      "style_bucket": "balanced everyday",
+      "best_use_cases": ["daily shooting", "mixed subjects", "clean reference look"],
+      "failure_cases": ["Can feel too plain when the brief needs strong mood."],
+      "compatibility_notes": "Broadly supported across Fujifilm bodies.",
+      "ranking_bias": {
+        "portrait_priority": 1,
+        "high_contrast_scene": 1,
+        "night_scene": 0,
+        "monochrome_candidate": -2
+      },
+      "default_recipe": {
+        "base_film_simulation": "PROVIA / Standard",
+        "wb": "Auto",
+        "wb_shift": "0 Red, 0 Blue",
+        "highlight": "0",
+        "shadow": "0",
+        "color": "0",
+        "grain": "Off",
+        "dynamic_range": "DR100",
+        "color_chrome": "Off",
+        "color_chrome_fx_blue": "Off",
+        "clarity": "0",
+        "sharpness": "0"
+      },
+      "preview_preset": {
+        "matrix": [[1.01, 0.0, -0.01], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+        "saturation": 1.0,
+        "brightness": 1.0,
+        "contrast": 1.0,
+        "monochrome": false,
+        "grain": 0.03
+      }
+    },
+    {
+      "name": "Velvia / Vivid",
+      "aliases": ["velvia", "vivid", "velvia / vivid"],
+      "summary": "Punchy, saturated, scenic.",
+      "menu_blurb": "高饱和高存在感，适合风光和旅行场景。",
+      "style_bucket": "vivid scenic",
+      "best_use_cases": ["landscapes", "travel scenery", "foliage and skies"],
+      "failure_cases": ["Skin tones can become too aggressive.", "Bright scenes can clip quickly."],
+      "compatibility_notes": "Broadly supported, but highlight handling still varies by body and ISO.",
+      "ranking_bias": {
+        "portrait_priority": -2,
+        "high_contrast_scene": -1,
+        "night_scene": -1,
+        "monochrome_candidate": -3
+      },
+      "default_recipe": {
+        "base_film_simulation": "Velvia / Vivid",
+        "wb": "Daylight",
+        "wb_shift": "0 Red, 0 Blue",
+        "highlight": "0",
+        "shadow": "0",
+        "color": "+2",
+        "grain": "Off",
+        "dynamic_range": "DR100",
+        "color_chrome": "Weak",
+        "color_chrome_fx_blue": "Off",
+        "clarity": "0",
+        "sharpness": "0"
+      },
+      "preview_preset": {
+        "matrix": [[1.06, -0.02, -0.02], [-0.01, 1.08, -0.02], [-0.01, -0.02, 1.08]],
+        "saturation": 1.24,
+        "brightness": 1.0,
+        "contrast": 1.1,
+        "monochrome": false,
+        "grain": 0.02
+      }
+    },
+    {
+      "name": "ASTIA / Soft",
+      "aliases": ["astia", "soft", "astia / soft"],
+      "summary": "Soft, flattering, portrait friendly.",
+      "menu_blurb": "柔和耐看，适合人像与温和日光。",
+      "style_bucket": "soft portrait",
+      "best_use_cases": ["portraits", "fashion", "gentle daylight rendering"],
+      "failure_cases": ["Can feel too gentle for gritty or graphic scenes."],
+      "compatibility_notes": "Broadly supported and especially useful for portrait-heavy workflows.",
+      "ranking_bias": {
+        "portrait_priority": 3,
+        "high_contrast_scene": 1,
+        "night_scene": 0,
+        "monochrome_candidate": -2
+      },
+      "default_recipe": {
+        "base_film_simulation": "ASTIA / Soft",
+        "wb": "Auto",
+        "wb_shift": "+1 Red, -1 Blue",
+        "highlight": "-1",
+        "shadow": "-1",
+        "color": "0",
+        "grain": "Weak",
+        "dynamic_range": "DR100",
+        "color_chrome": "Off",
+        "color_chrome_fx_blue": "Off",
+        "clarity": "0",
+        "sharpness": "0"
+      },
+      "preview_preset": {
+        "matrix": [[1.02, 0.0, -0.02], [0.0, 1.0, 0.0], [0.0, 0.0, 0.99]],
+        "saturation": 0.94,
+        "brightness": 1.02,
+        "contrast": 0.95,
+        "monochrome": false,
+        "grain": 0.03
+      }
+    },
+    {
+      "name": "Classic Chrome",
+      "aliases": ["classic chrome"],
+      "summary": "Subdued, documentary, editorial.",
+      "menu_blurb": "低饱和纪实感，适合街头与编辑风。",
+      "style_bucket": "documentary editorial",
+      "best_use_cases": ["street", "travel", "magazine-style color"],
+      "failure_cases": ["Skin can become too restrained for beauty-oriented portraits."],
+      "compatibility_notes": "Works on many bodies, but newer bodies add Color Chrome FX Blue and Clarity control.",
+      "ranking_bias": {
+        "portrait_priority": 1,
+        "high_contrast_scene": 1,
+        "night_scene": 1,
+        "monochrome_candidate": -1
+      },
+      "default_recipe": {
+        "base_film_simulation": "Classic Chrome",
+        "wb": "Daylight",
+        "wb_shift": "+1 Red, -2 Blue",
+        "highlight": "0",
+        "shadow": "+1",
+        "color": "-1",
+        "grain": "Weak",
+        "dynamic_range": "DR100",
+        "color_chrome": "Weak",
+        "color_chrome_fx_blue": "Weak",
+        "clarity": "0",
+        "sharpness": "0"
+      },
+      "preview_preset": {
+        "matrix": [[1.03, -0.03, 0.0], [0.0, 0.96, 0.02], [0.01, 0.01, 0.96]],
+        "saturation": 0.82,
+        "brightness": 1.01,
+        "contrast": 1.05,
+        "monochrome": false,
+        "grain": 0.05
+      }
+    },
+    {
+      "name": "Classic Neg.",
+      "aliases": ["classic neg", "classic negative", "classic neg."],
+      "summary": "Nostalgic, everyday negative-film, denser shadows.",
+      "menu_blurb": "怀旧负片气质，暗部更密，生活感更强。",
+      "style_bucket": "nostalgic everyday negative",
+      "best_use_cases": ["suburban memory", "nostalgic street", "everyday life with mood"],
+      "failure_cases": ["Can over-darken dim scenes.", "Skin can feel stern under poor light."],
+      "compatibility_notes": "Generation-dependent. Not every body supports Classic Neg. or adjacent controls.",
+      "ranking_bias": {
+        "portrait_priority": 0,
+        "high_contrast_scene": 1,
+        "night_scene": 1,
+        "monochrome_candidate": -1
+      },
+      "default_recipe": {
+        "base_film_simulation": "Classic Neg.",
+        "wb": "Auto",
+        "wb_shift": "0 Red, -2 Blue",
+        "highlight": "-1",
+        "shadow": "+1",
+        "color": "-2",
+        "grain": "Weak",
+        "dynamic_range": "DR200",
+        "color_chrome": "Off",
+        "color_chrome_fx_blue": "Off",
+        "clarity": "0",
+        "sharpness": "0"
+      },
+      "preview_preset": {
+        "matrix": [[1.02, -0.01, -0.01], [0.0, 0.95, 0.02], [0.02, 0.02, 0.98]],
+        "saturation": 0.88,
+        "brightness": 0.99,
+        "contrast": 1.08,
+        "monochrome": false,
+        "grain": 0.06
+      }
+    },
+    {
+      "name": "ETERNA",
+      "aliases": ["eterna"],
+      "summary": "Cinematic, low-contrast, muted.",
+      "menu_blurb": "低反差电影感，适合安静氛围和夜景。",
+      "style_bucket": "cinematic muted",
+      "best_use_cases": ["cinematic stills", "quiet travel scenes", "video-like mood"],
+      "failure_cases": ["May feel too flat if the user expects punch."],
+      "compatibility_notes": "Availability varies by body; older bodies may require PRO Neg. Std as a fallback.",
+      "ranking_bias": {
+        "portrait_priority": 1,
+        "high_contrast_scene": 2,
+        "night_scene": 3,
+        "monochrome_candidate": -2
+      },
+      "default_recipe": {
+        "base_film_simulation": "ETERNA",
+        "wb": "Auto",
+        "wb_shift": "0 Red, 0 Blue",
+        "highlight": "-1",
+        "shadow": "-1",
+        "color": "-2",
+        "grain": "Weak",
+        "dynamic_range": "DR200",
+        "color_chrome": "Off",
+        "color_chrome_fx_blue": "Off",
+        "clarity": "0",
+        "sharpness": "0"
+      },
+      "preview_preset": {
+        "matrix": [[1.0, 0.0, 0.0], [0.0, 0.97, 0.01], [0.01, 0.01, 0.98]],
+        "saturation": 0.78,
+        "brightness": 1.01,
+        "contrast": 0.9,
+        "monochrome": false,
+        "grain": 0.04
+      }
+    },
+    {
+      "name": "ACROS",
+      "aliases": ["acros"],
+      "summary": "Deep monochrome with strong depth and texture.",
+      "menu_blurb": "高质感黑白，适合纹理与图形感场景。",
+      "style_bucket": "monochrome depth",
+      "best_use_cases": ["black-and-white portraits", "graphic street scenes", "texture-heavy work"],
+      "failure_cases": ["Not suitable when the user still wants color information."],
+      "compatibility_notes": "Filter variants such as Ye, R, and G vary by body and should be chosen consciously.",
+      "ranking_bias": {
+        "portrait_priority": 0,
+        "high_contrast_scene": 1,
+        "night_scene": 0,
+        "monochrome_candidate": 3
+      },
+      "default_recipe": {
+        "base_film_simulation": "ACROS",
+        "wb": "N/A",
+        "wb_shift": "N/A",
+        "highlight": "0",
+        "shadow": "+1",
+        "color": "N/A",
+        "grain": "Weak",
+        "dynamic_range": "DR100",
+        "color_chrome": "N/A",
+        "color_chrome_fx_blue": "N/A",
+        "clarity": "0",
+        "sharpness": "0"
+      },
+      "preview_preset": {
+        "matrix": null,
+        "saturation": 0,
+        "brightness": 1.0,
+        "contrast": 1.12,
+        "monochrome": true,
+        "grain": 0.07
+      }
+    }
+  ]
+}

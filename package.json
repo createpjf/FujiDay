@@ -1,0 +1,45 @@
+{
+  "name": "fujiday",
+  "version": "0.1.0",
+  "description": "FujiDay is a Fujifilm-first agentic grading system with skills, runtime, style packs, commands, and eval scaffolding.",
+  "main": "index.js",
+  "homepage": "https://github.com/<owner>/FujiDay#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/<owner>/FujiDay.git"
+  },
+  "bugs": {
+    "url": "https://github.com/<owner>/FujiDay/issues"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "node --test",
+    "eval:fixtures": "node evals/generate-synthetic-fixtures.js",
+    "eval:check": "node evals/run-evals.js"
+  },
+  "bin": {
+    "grade-fujifilm": "./commands/grade-fujifilm.js",
+    "compare-fujifilm": "./commands/compare-fujifilm.js",
+    "export-fujifilm": "./commands/export-fujifilm.js",
+    "build-style-pack": "./commands/build-style-pack.js"
+  },
+  "keywords": [
+    "fujifilm",
+    "film-simulation",
+    "agent-skill",
+    "photo-grading",
+    "preview",
+    "codex",
+    "claude"
+  ],
+  "author": "OpenAI Codex",
+  "license": "MIT",
+  "dependencies": {
+    "sharp": "^0.33.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.1.0",
+    "globals": "^17.4.0"
+  }
+}
